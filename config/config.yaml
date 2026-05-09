@@ -1,0 +1,62 @@
+# RAG系统配置文件
+
+# LLM配置
+llm:
+  provider: "openai"  # openai, claude, qwen
+  model: "gpt-3.5-turbo"
+  api_key: "${OPENAI_API_KEY}"  # 从环境变量读取
+  temperature: 0.7
+  max_tokens: 2000
+
+# Embedding配置
+embedding:
+  model: "text2vec-base-chinese"  # text2vec-base-chinese, bge-large-zh
+  device: "cuda"  # cuda, cpu
+  batch_size: 32
+
+# 向量数据库配置
+vectorstore:
+  type: "milvus"  # milvus, faiss
+  host: "localhost"
+  port: 19530
+  collection_name: "knowledge_base"
+  index_type: "IVF_FLAT"  # IVF_FLAT, HNSW
+  metric_type: "COSINE"  # L2, IP, COSINE
+  nlist: 1024  # IVF参数
+
+# 文档处理配置
+document:
+  chunk_size: 500
+  chunk_overlap: 50
+  separators: ["\n\n", "\n", "。", "！", "？", "；", ",", " ", ""]
+  
+# 检索配置
+retrieval:
+  top_k: 10
+  score_threshold: 0.5
+  use_hybrid: true  # 是否使用混合检索
+  use_rerank: true  # 是否使用重排序
+  rerank_model: "BAAI/bge-reranker-large"
+  vector_weight: 0.7  # 向量检索权重
+  bm25_weight: 0.3    # BM25检索权重
+
+# 对话配置
+conversation:
+  max_history: 5  # 保留最近N轮对话
+  context_window: 4000  # 上下文窗口大小（tokens）
+
+# 数据库配置
+database:
+  mongodb:
+    uri: "mongodb://localhost:27017"
+    database: "rag_system"
+  redis:
+    host: "localhost"
+    port: 6379
+    db: 0
+
+# 日志配置
+logging:
+  level: "INFO"
+  file: "logs/rag_system.log"
+  rotation: "10 MB"
